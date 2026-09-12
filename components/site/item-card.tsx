@@ -2,6 +2,7 @@ import { Download, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PHASE_LABELS, type ItemWithTags } from "@/lib/types";
 import { getPublicFileUrl } from "@/lib/storage";
+import { TagIcon } from "@/lib/tag-icons";
 
 export function ItemCard({ item }: { item: ItemWithTags }) {
   return (
@@ -26,7 +27,10 @@ export function ItemCard({ item }: { item: ItemWithTags }) {
       {item.tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {item.tags.map((tag) => (
-            <Badge key={tag.id}>{tag.name}</Badge>
+            <Badge key={tag.id}>
+              <TagIcon icon={tag.icon} className="h-3 w-3" />
+              {tag.name}
+            </Badge>
           ))}
         </div>
       )}

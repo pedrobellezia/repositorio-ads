@@ -6,6 +6,7 @@ import { ItemCard } from "@/components/site/item-card";
 import type { CategoryWithTags } from "@/lib/data";
 import { PHASE_LABELS, PHASES, type ItemWithTags } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { TagIcon } from "@/lib/tag-icons";
 
 export function ItemBrowser({
   items,
@@ -87,12 +88,13 @@ export function ItemBrowser({
                   key={tag.id}
                   onClick={() => toggleTag(tag.id)}
                   className={cn(
-                    "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                    "inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                     selectedTags.has(tag.id)
                       ? "border-slate-900 bg-slate-900 text-white"
                       : "border-slate-300 bg-white text-slate-600 hover:bg-slate-50",
                   )}
                 >
+                  <TagIcon icon={tag.icon} className="h-3 w-3" />
                   {tag.name}
                 </button>
               ))}
