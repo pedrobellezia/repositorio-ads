@@ -19,7 +19,15 @@ begin
       raw_app_meta_data,
       raw_user_meta_data,
       created_at,
-      updated_at
+      updated_at,
+      confirmation_token,
+      recovery_token,
+      email_change_token_new,
+      email_change,
+      email_change_token_current,
+      phone_change,
+      phone_change_token,
+      reauthentication_token
     ) values (
       '00000000-0000-0000-0000-000000000000',
       v_user_id,
@@ -31,7 +39,17 @@ begin
       '{"provider":"email","providers":["email"]}',
       '{"display_name":"Administrador"}',
       now(),
-      now()
+      now(),
+      -- GoTrue lê essas colunas como string (não NULL) ao autenticar;
+      -- deixá-las NULL faz o /auth/v1/token responder 500.
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      ''
     );
 
     insert into auth.identities (
