@@ -1,7 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
+import { mockCategories, mockItems } from "@/server/mock-data";
 import type { Item, ItemWithTags, Tag, TagCategory } from "@/lib/types";
 
+const useMockData = process.env.MOCK_TRUE === "true";
+
 export async function getPublicItems(): Promise<ItemWithTags[]> {
+  if (useMockData) return mockItems;
+
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -25,6 +30,8 @@ export async function getPublicItems(): Promise<ItemWithTags[]> {
 export type CategoryWithTags = TagCategory & { tags: Tag[] };
 
 export async function getTagCategories(): Promise<CategoryWithTags[]> {
+  if (useMockData) return mockCategories;
+
   const supabase = await createClient();
 
   const { data, error } = await supabase
