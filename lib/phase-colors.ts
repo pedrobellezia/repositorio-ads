@@ -7,6 +7,4 @@ export const PHASE_COLORS: Record<Phase, string> = {
   "3fase": "#66CDAA",
   "4fase": "#FF69B4",
   "5fase": "#6C757D",
-  "6fase": "#9400D3",
-  "7fase": "#FF8C00",
 };

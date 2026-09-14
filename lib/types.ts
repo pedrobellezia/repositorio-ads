@@ -5,8 +5,6 @@ export const PHASES = [
   "3fase",
   "4fase",
   "5fase",
-  "6fase",
-  "7fase",
 ] as const;
 
 export type Phase = (typeof PHASES)[number];
@@ -18,8 +16,6 @@ export const PHASE_LABELS: Record<Phase, string> = {
   "3fase": "3ª Fase",
   "4fase": "4ª Fase",
   "5fase": "5ª Fase",
-  "6fase": "6ª Fase",
-  "7fase": "7ª Fase",
 };
 
 export type Role = "admin" | "professor";
