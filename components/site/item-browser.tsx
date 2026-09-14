@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ItemCard } from "@/components/site/item-card";
 import type { CategoryWithTags } from "@/lib/data";
 import { PHASE_LABELS, PHASES, type ItemWithTags } from "@/lib/types";
+import { PHASE_COLORS } from "@/lib/phase-colors";
 import { cn } from "@/lib/utils";
 import { TagIcon } from "@/lib/tag-icons";
 
@@ -57,7 +58,9 @@ export function ItemBrowser({
     <div className="grid gap-6 md:grid-cols-[240px_1fr]">
       <aside className="space-y-6">
         <div>
-          <h2 className="mb-2 text-sm font-semibold text-slate-700">Fase</h2>
+          <h2 className="mb-2 font-heading text-sm font-semibold text-secondary">
+            Fase
+          </h2>
           <div className="flex flex-wrap gap-1.5 md:flex-col">
             <PhaseButton
               active={phase === "todas"}
@@ -69,6 +72,7 @@ export function ItemBrowser({
               <PhaseButton
                 key={p}
                 active={phase === p}
+                color={PHASE_COLORS[p]}
                 onClick={() => setPhase(p)}
               >
                 {PHASE_LABELS[p]}
@@ -79,7 +83,7 @@ export function ItemBrowser({
 
         {categories.map((category) => (
           <div key={category.id}>
-            <h2 className="mb-2 text-sm font-semibold text-slate-700">
+            <h2 className="mb-2 font-heading text-sm font-semibold text-secondary">
               {category.name}
             </h2>
             <div className="flex flex-wrap gap-1.5 md:flex-col md:items-start">
@@ -90,8 +94,8 @@ export function ItemBrowser({
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors",
                     selectedTags.has(tag.id)
-                      ? "border-slate-900 bg-slate-900 text-white"
-                      : "border-slate-300 bg-white text-slate-600 hover:bg-slate-50",
+                      ? "border-secondary bg-secondary text-white"
+                      : "border-accent-border/50 bg-white text-secondary hover:bg-section",
                   )}
                 >
                   <TagIcon icon={tag.icon} className="h-3 w-3" />
@@ -133,20 +137,23 @@ export function ItemBrowser({
 function PhaseButton({
   active,
   onClick,
+  color,
   children,
 }: {
   active: boolean;
   onClick: () => void;
+  color?: string;
   children: React.ReactNode;
 }) {
   return (
     <button
       onClick={onClick}
+      style={active && color ? { backgroundColor: color, borderColor: color } : undefined}
       className={cn(
         "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
         active
-          ? "border-slate-900 bg-slate-900 text-white"
-          : "border-slate-300 bg-white text-slate-600 hover:bg-slate-50",
+          ? "border-secondary bg-secondary text-white"
+          : "border-accent-border/50 bg-white text-secondary hover:bg-section",
       )}
     >
       {children}
