@@ -23,22 +23,17 @@ dados e autenticação no Supabase.
      de busca por tags parecidas)
    - `supabase/migrations/0002_rls.sql` (políticas de segurança + bucket de
      storage `item-files`)
+   - `supabase/migrations/0003_seed_admin.sql` (cria o usuário admin padrão)
    - `supabase/seed.sql` (opcional: migra os itens do repositório antigo
      como dado inicial)
-3. Em **Authentication → Providers**, deixe o login por e-mail (magic link)
-   habilitado — é o único método usado neste projeto (sem senha).
-4. Em **Authentication → URL Configuration**, adicione a URL do seu site
-   (local e/ou de produção) em *Redirect URLs*, ex:
-   `http://localhost:3000/auth/callback` e
-   `https://seu-projeto.vercel.app/auth/callback`.
-5. Crie sua própria conta acessando `/login` do app rodando localmente e
-   entrando com seu e-mail — isso cria seu `profiles` com papel `professor`
-   por padrão. Depois, no SQL Editor, promova essa conta a admin:
-   ```sql
-   update public.profiles set role = 'admin' where id = 'SEU_USER_ID';
-   ```
-   (o `id` aparece em **Authentication → Users**).
-6. Em **Project Settings → API**, copie a `URL`, a `anon public key` e a
+3. O login é por e-mail e senha (`supabase.auth.signInWithPassword`), sem
+   nenhum envio de e-mail. A migration `0003_seed_admin.sql` já cria o admin
+   padrão: e-mail `admin@fmp.edu.br`, senha `trocar-depois-123`. Entre com
+   essas credenciais em `/login` e troque a senha o quanto antes (em
+   **Authentication → Users**, no dashboard do Supabase). Novos professores
+   são criados pelo admin em `/admin/professors`, informando e-mail e uma
+   senha inicial.
+4. Em **Project Settings → API**, copie a `URL`, a `anon public key` e a
    `service_role key` para o `.env.local` (veja abaixo). A `service_role
    key` é secreta — nunca a exponha no frontend.
 
@@ -66,7 +61,7 @@ Abra [http://localhost:3000](http://localhost:3000) para o site público e
 ## Estrutura
 
 - `app/page.tsx` — site público (filtro por fase + tags).
-- `app/login`, `app/auth/callback` — login por magic link.
+- `app/login` — login por e-mail e senha.
 - `app/admin/items`, `app/admin/tags`, `app/admin/categories`,
   `app/admin/professors` — painel de gestão (protegido pelo `proxy.ts`).
 - `supabase/migrations`, `supabase/seed.sql` — schema, RLS e dado inicial.
@@ -74,6 +69,7 @@ Abra [http://localhost:3000](http://localhost:3000) para o site público e
 ## Papéis e permissões
 
 - **Leitura pública**: qualquer visitante vê e baixa itens sem login.
-- **Professor**: login por convite, CRUD completo de itens e tags.
+- **Professor**: acesso criado pelo admin (e-mail + senha), CRUD completo de
+  itens e tags.
 - **Admin**: tudo que o professor pode, mais criar/excluir categorias de tag
   e convidar novos professores.

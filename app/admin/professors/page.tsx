@@ -28,8 +28,8 @@ export default async function AdminProfessorsPage() {
       <div>
         <h1 className="text-xl font-bold text-slate-900">Professores</h1>
         <p className="text-sm text-slate-500">
-          Convide novos professores por e-mail — eles recebem um link de
-          acesso e já entram logados, sem precisar de senha.
+          Crie o acesso do professor com e-mail e uma senha inicial — repasse
+          a senha a ele e peça para trocá-la no primeiro acesso.
         </p>
       </div>
 

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 
 export function InviteProfessorForm() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle",
@@ -20,12 +21,13 @@ export function InviteProfessorForm() {
     const res = await fetch("/api/admin/invite-professor", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, display_name: displayName }),
+      body: JSON.stringify({ email, password, display_name: displayName }),
     });
 
     if (res.ok) {
       setStatus("sent");
       setEmail("");
+      setPassword("");
       setDisplayName("");
     } else {
       const body = await res.json().catch(() => ({}));
@@ -58,10 +60,21 @@ export function InviteProfessorForm() {
             onChange={(e) => setDisplayName(e.target.value)}
           />
         </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="invite-password">Senha inicial</Label>
+          <Input
+            id="invite-password"
+            type="text"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
       </div>
 
       {status === "sent" && (
-        <p className="text-sm text-green-600">Convite enviado com sucesso.</p>
+        <p className="text-sm text-green-600">Professor criado com sucesso.</p>
       )}
       {status === "error" && (
         <p className="text-sm text-red-600">{errorMessage}</p>

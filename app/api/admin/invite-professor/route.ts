@@ -22,21 +22,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Acesso restrito ao admin." }, { status: 403 });
   }
 
-  const { email, display_name } = (await request.json()) as {
+  const { email, password, display_name } = (await request.json()) as {
     email?: string;
+    password?: string;
     display_name?: string;
   };
 
-  if (!email) {
-    return NextResponse.json({ error: "Informe um e-mail." }, { status: 400 });
+  if (!email || !password) {
+    return NextResponse.json(
+      { error: "Informe e-mail e senha." },
+      { status: 400 },
+    );
   }
 
-  const origin = new URL(request.url).origin;
   const admin = createAdminClient();
 
-  const { error } = await admin.auth.admin.inviteUserByEmail(email, {
-    data: { display_name: display_name ?? null },
-    redirectTo: `${origin}/auth/callback?next=/admin`,
+  const { error } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { display_name: display_name ?? null },
   });
 
   if (error) {

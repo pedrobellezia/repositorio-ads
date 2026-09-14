@@ -1,43 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "/admin";
 
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  );
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("sending");
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
-      },
+      password,
     });
 
-    setStatus(error ? "error" : "sent");
-  }
+    if (error) {
+      setStatus("error");
+      return;
+    }
 
-  if (status === "sent") {
-    return (
-      <p className="text-sm text-slate-600">
-        Enviamos um link de acesso para <strong>{email}</strong>. Confira sua
-        caixa de entrada.
-      </p>
-    );
+    router.push(next);
+    router.refresh();
   }
 
   return (
@@ -54,15 +49,23 @@ export function LoginForm() {
         />
       </div>
 
+      <div className="space-y-1.5">
+        <Label htmlFor="password">Senha</Label>
+        <Input
+          id="password"
+          type="password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+
       {status === "error" && (
-        <p className="text-sm text-red-600">
-          Não foi possível enviar o link. Verifique o e-mail e tente
-          novamente.
-        </p>
+        <p className="text-sm text-red-600">E-mail ou senha inválidos.</p>
       )}
 
       <Button type="submit" disabled={status === "sending"} className="w-full">
-        {status === "sending" ? "Enviando..." : "Enviar link de acesso"}
+        {status === "sending" ? "Entrando..." : "Entrar"}
       </Button>
     </form>
   );
